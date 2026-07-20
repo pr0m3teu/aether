@@ -1,35 +1,32 @@
-org 0x7C00
+org 0x7c00
 
 bits 16
 
-jmp _start
-
-msg db "Hello, World!", 10, 13, 0
-
-print_string:
-    lodsb
-    or al, al
-    jz done 
-    mov ah, 0x0E
-    int 0x10
-    jmp print_string 
-
-done:
-    ret
-
-
 _start:
     cld
-    xor bx, bx
+    ; Initializing segments
     xor ax, ax
     mov ds, ax
     mov es, ax
+    mov ss, ax
+    mov sp, 0x7c00
 
-    mov si, msg
+    mov si, msg 
     call print_string 
 
+    ; TODO: Enable A20Line (see: https://wiki.osdev.org/A20_Line)
+
+    ; Loading GDT
     cli
+    lgdt [gdt_descriptor]
+
+    ; Entering protected mode
+    mov eax, cr0
+    or eax, 0x1
+    mov cr0, eax
+
     hlt
+
 
 ; load dh sectors to es:bx from drive dl
 disk_load:
@@ -48,14 +45,54 @@ disk_load:
     cmp dh, al
     jne disk_error
     ret
-
 disk_error:
     mov si, DISK_ERROR_MSG
     call print_string 
     jmp $
         
 
+print_string:
+    lodsb
+    or al, al
+    jz done 
+    mov ah, 0x0E
+    int 0x10
+    jmp print_string 
+
+done:
+    ret
+
+
+msg db "Welcome to project Aether!", 10, 13, 0
 DISK_ERROR_MSG db "[ERROR] Could not read from disk!", 10, 13, 0
+
+; Setting up GDT
+gdt_start:
+gdt_null: ; Null Descriptor
+    dq 0x0 
+
+gdt_code: ; Kernel Mode Code Segment
+    dw 0xffff ; Limit [15:0]
+    dw 0x0000 ; Base  [15:0]
+    db 0x00   ; Base  [23:16]
+    db 0x9a   ; Access Byte
+    db 0xcf   ; Flags + Limit [19: 16] 
+    db 0x00   ; Base [31:24]
+
+gdt_data: ; Kernel Mode Data Segment
+    dw 0xffff ; Limit [15:0]
+    dw 0x0000 ; Base  [15:0]
+    db 0x00   ; Base  [23:16]
+    db 0x92   ; Access Byte
+    db 0xcf   ; Flags + Limit [19: 16] 
+    db 0x00   ; Base [31:24]
+gdt_end:
+
+gdt_descriptor:
+    dw gdt_end - gdt_start - 1  ; GDTR(Limit)
+    dd gdt_start                ; GDTR(Base)
+                                ; See https://www.felixcloutier.com/x86/lgdt:lidt
+
 
 times 510 - ($-$$) db 0
 dw 0xAA55
