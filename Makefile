@@ -15,3 +15,4 @@ qemu: boot
 clean:
 	rm -f build/*.bin
 	rm -f build/*.img
+	rm -f build/*.log
