@@ -70,10 +70,27 @@ _start:
     call print_string
 
     ; Prepare for Protected Mode
-    cli ;  also dissable NMI (Non-Maskable Interrupt)
+    cli ; TODO: also dissable NMI (Non-Maskable Interrupt)
 
-    ; TODO: Enable A20Line (see: https://wiki.osdev.org/A20_Line)
+    ; Enable A20Line (see: https://wiki.osdev.org/A20_Line)
+    ; TODO: Check if it isn't already enabled
+a20.1:
+    in al, 0x64
+    test al, 0x2
+    jnz a20.1
 
+    mov al, 0xd1
+    out 0x64, al
+
+a20.2:
+    in al, 0x64
+    test al, 0x2
+    jnz a20.2
+
+    mov al, 0xdf
+    out 0x64, al
+
+GDT:
     ; Loading GDT
     lgdt [gdt_descriptor]
 
@@ -94,6 +111,8 @@ reload_segments: ; Protected Mode Flat Model
     mov fs, ax
     mov gs, ax
     mov ss, ax
+
+    mov esp, 0x90000
     
     jmp KERNEL_ENTRY
     

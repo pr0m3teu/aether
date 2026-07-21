@@ -2,7 +2,7 @@ CC=x86_64-elf-gcc
 LD=x86_64-elf-ld
 
 
-CFLAGS=-Wall -Wextra -std=c11 -ffreestanding 
+CFLAGS=-Wall -Wextra -std=c11 -O2 -ffreestanding -fno-PIE
 LFLAGS=-T kernel/kernel.ld --oformat binary
 QEMU_FLAGS=-drive format=raw,file=build/aether.img  -m 128M -cpu qemu64 -no-reboot -no-shutdown \
 			-serial stdio \
@@ -31,6 +31,4 @@ qemu: build/boot.bin build/kernel.out
 
 .PHONY: clean
 clean:
-	rm -f build/*.bin
-	rm -f build/*.img
-	rm -f build/*.log
+	rm -f build/*.*
