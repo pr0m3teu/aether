@@ -2,6 +2,9 @@ org 0x7c00
 
 bits 16
 
+KERNEL_ENTRY equ 0x10000
+
+section .text
 jmp _start
 
 print_string:
@@ -17,20 +20,22 @@ done:
 
 ; load dh sectors to es:bx from drive dl
 disk_load:
-   push dx
+    pushf
+    push dx
 
-   mov ah, 0x2
-   mov al, dh ; read dh sectors
-   mov ch, 0x0 ; select cylinder 0
-   mov dh, 0x0 ; select track 0
-   mov cl, 0x2 ; read starting from 2nd sector (1st sector is the boot sector)
-   
-   int 0x13
+    mov ah, 0x2
+    mov al, dh ; read dh sectors
+    mov ch, 0x0 ; select cylinder 0
+    mov dh, 0x0 ; select track 0
+    mov cl, 0x2 ; read starting from 2nd sector (1st sector is the boot sector)
+
+    int 0x13
 
     jc disk_error
     pop dx
     cmp dh, al
     jne disk_error
+    popf
     ret
 disk_error:
     mov si, DISK_ERROR_MSG
@@ -50,6 +55,21 @@ _start:
     mov si, msg 
     call print_string 
 
+    ; Load Kernel
+    mov si, LOADING_KERNEL
+    call print_string
+
+    mov ax, 0x1000
+    mov es, ax 
+    mov bx, 0x0000
+    mov dh, 0x1
+
+    call disk_load
+
+    mov si, LOADED_KERNEL
+    call print_string
+
+    ; Prepare for Protected Mode
     cli ;  also dissable NMI (Non-Maskable Interrupt)
 
     ; TODO: Enable A20Line (see: https://wiki.osdev.org/A20_Line)
@@ -75,11 +95,8 @@ reload_segments: ; Protected Mode Flat Model
     mov gs, ax
     mov ss, ax
     
-    jmp $ 
-
-
-msg db "Welcome to project Aether!", 10, 13, 0
-DISK_ERROR_MSG db "[ERROR] Could not read from disk!", 10, 13, 0
+    jmp KERNEL_ENTRY
+    
 
 ; Setting up GDT
 gdt_start:
@@ -107,6 +124,11 @@ gdt_descriptor:
     dw gdt_end - gdt_start - 1  ; GDTR(Limit)
     dd gdt_start                ; GDTR(Base)
                                 ; See https://www.felixcloutier.com/x86/lgdt:lidt
+
+msg db "Welcome to project Aether!", 10, 13, 0
+LOADING_KERNEL db "[INFO] Loading Kernel...", 10, 13, 0
+LOADED_KERNEL  db "[INFO] Successfully loaded Kernel", 10, 13, 0
+DISK_ERROR_MSG db "[ERROR] Could not read from disk!", 10, 13, 0
 
 
 times 510 - ($-$$) db 0
