@@ -2,30 +2,17 @@ org 0x7c00
 
 bits 16
 
-_start:
-    cld
-    ; Initializing segments
-    xor ax, ax
-    mov ds, ax
-    mov es, ax
-    mov ss, ax
-    mov sp, 0x7c00
+jmp _start
 
-    mov si, msg 
-    call print_string 
-
-    ; TODO: Enable A20Line (see: https://wiki.osdev.org/A20_Line)
-
-    ; Loading GDT
-    cli
-    lgdt [gdt_descriptor]
-
-    ; Entering protected mode
-    mov eax, cr0
-    or eax, 0x1
-    mov cr0, eax
-
-    hlt
+print_string:
+    lodsb
+    or al, al
+    jz done 
+    mov ah, 0x0E
+    int 0x10
+    jmp print_string 
+done:
+    ret
 
 
 ; load dh sectors to es:bx from drive dl
@@ -51,16 +38,44 @@ disk_error:
     jmp $
         
 
-print_string:
-    lodsb
-    or al, al
-    jz done 
-    mov ah, 0x0E
-    int 0x10
-    jmp print_string 
+_start:
+    cld
+    ; Initializing segments
+    xor ax, ax
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
+    mov sp, 0x7c00
 
-done:
-    ret
+    mov si, msg 
+    call print_string 
+
+    cli ;  also dissable NMI (Non-Maskable Interrupt)
+
+    ; TODO: Enable A20Line (see: https://wiki.osdev.org/A20_Line)
+
+    ; Loading GDT
+    lgdt [gdt_descriptor]
+
+    ; Entering protected mode
+    mov eax, cr0
+    or eax, 0x1
+    mov cr0, eax
+
+reload_cs:
+    jmp 0x08:reload_segments
+
+; Protected Mode
+bits 32
+reload_segments: ; Protected Mode Flat Model
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+    
+    jmp $ 
 
 
 msg db "Welcome to project Aether!", 10, 13, 0
