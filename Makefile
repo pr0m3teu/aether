@@ -2,8 +2,11 @@ CC=x86_64-elf-gcc
 LD=x86_64-elf-ld
 
 
-CFLAGS=-Wall -Wextra -std=c11 -O2 -ffreestanding -fno-PIE
-LFLAGS=-T kernel/kernel.ld --oformat binary
+CFLAGS=-Wall -Wextra -std=c11 -O2 -ffreestanding -fno-PIE -m32
+# Because of no SSE availability yet
+CFLAGS +=-mno-sse -mno-sse2 -mno-mmx -mno-80387
+
+LFLAGS=-T kernel/kernel.ld --oformat binary -m elf_i386
 QEMU_FLAGS=-drive format=raw,file=build/aether.img  -m 128M -cpu qemu64 -no-reboot -no-shutdown \
 			-serial stdio \
 			-d int,cpu_reset,in_asm \
