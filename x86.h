@@ -1,6 +1,6 @@
 // Basic functions for I/O
 
-unsigned char in(unsigned char port)
+unsigned char in(unsigned short port)
 {
     unsigned char result;
 
@@ -10,8 +10,7 @@ unsigned char in(unsigned char port)
 
 }
 
-
-void out(unsigned char port, unsigned char value)
+void out(unsigned short port, unsigned char value)
 {
     __asm__ volatile ("out %%al, %%dx": :"a" (value) ,"d" (port));
 }

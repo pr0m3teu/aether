@@ -50,7 +50,8 @@ _start:
     mov ds, ax
     mov es, ax
     mov ss, ax
-    mov sp, 0x7c00
+    mov bp, 0x7c00
+    mov sp, bp 
 
     mov si, msg 
     call print_string 
@@ -62,7 +63,7 @@ _start:
     mov ax, 0x1000
     mov es, ax 
     mov bx, 0x0000
-    mov dh, 0x1
+    mov dh, 0x2
 
     call disk_load
 
@@ -112,11 +113,11 @@ reload_segments: ; Protected Mode Flat Model
     mov gs, ax
     mov ss, ax
 
-    mov esp, 0x90000
+    mov ebp, 0x90000
+    mov esp, ebp 
     
     jmp KERNEL_ENTRY
     
-
 ; Setting up GDT
 gdt_start:
 gdt_null: ; Null Descriptor

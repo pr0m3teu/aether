@@ -2,9 +2,10 @@ ENTRY(kernel_entry)
 
 SECTIONS
 {
-    . = 0x100000;
+    . = 0x10000;
 
     .text : {
+        *(.text.boot)
         *(.text)
     }
 
