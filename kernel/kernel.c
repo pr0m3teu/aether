@@ -1,18 +1,13 @@
-#define VIDEO_MEM ((volatile char*) 0xb8000)
+#include "vga_driver.h"
 
+__attribute__((section(".text.boot"))) // Small hack for now
 void kernel_entry(void)
 {
-    unsigned char *video_mem = (unsigned char*) VIDEO_MEM;
-
     char message[] = "Hello from Protected Mode!\n";
-    short i = 0;
-    
-    while (message[i] != '\0')
-    {
-        video_mem[i*2] = message[i];
-        video_mem[i*2 + 1] = 0x0f;
-        i++;
-    }
+
+    vga_clear_screen();
+    vga_print_string(message);
+    vga_print_string("This should also be on a new line\n");
 
     for (;;) {
         __asm__ volatile ("hlt");

@@ -5,9 +5,10 @@ LD=x86_64-elf-ld
 CFLAGS=-Wall -Wextra -std=c11 -O2 -ffreestanding -fno-PIE -m32
 # Because of no SSE availability yet
 CFLAGS +=-mno-sse -mno-sse2 -mno-mmx -mno-80387
-
 LFLAGS=-T kernel/kernel.ld --oformat binary -m elf_i386
-QEMU_FLAGS=-drive format=raw,file=build/aether.img  -m 128M -cpu qemu64 -no-reboot -no-shutdown \
+QEMU_FLAGS=-drive format=raw,file=build/aether.img -m 128M \
+		   	-cpu qemu64 \
+			-no-reboot -no-shutdown \
 			-serial stdio \
 			-d int,cpu_reset,in_asm \
 			-D build/qemu.log
@@ -22,10 +23,12 @@ build/boot.bin: boot.asm build/kernel.out
 	dd if=build/kernel.out of=build/aether.img bs=512 seek=1 conv=notrunc
 
 
-build/kernel.out: kernel/kernel.c
+build/kernel.out: kernel/kernel.c kernel/kernel.ld build/vga_driver.o
 	 $(CC) $(CFLAGS) -c kernel/kernel.c -o build/kernel.o
-	 $(LD) $(LFLAGS) -o build/kernel.out build/kernel.o
+	 $(LD) $(LFLAGS) -o build/kernel.out build/kernel.o build/vga_driver.o
 	 
+build/vga_driver.o: kernel/vga_driver.c kernel/vga_driver.h
+	$(CC) $(CFLAGS) -c kernel/vga_driver.c -o build/vga_driver.o
 	 
 .PHONY: qemu
 qemu: build/boot.bin build/kernel.out
