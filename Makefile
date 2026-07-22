@@ -3,6 +3,7 @@ LD=x86_64-elf-ld
 
 
 CFLAGS=-Wall -Wextra -std=c11 -O2 -ffreestanding -fno-PIE -m32
+CFLAGS +=-I.
 # Because of no SSE availability yet
 CFLAGS +=-mno-sse -mno-sse2 -mno-mmx -mno-80387
 LFLAGS=-T kernel/kernel.ld --oformat binary -m elf_i386
@@ -27,8 +28,8 @@ build/kernel.out: kernel/kernel.c kernel/kernel.ld build/vga_driver.o
 	 $(CC) $(CFLAGS) -c kernel/kernel.c -o build/kernel.o
 	 $(LD) $(LFLAGS) -o build/kernel.out build/kernel.o build/vga_driver.o
 	 
-build/vga_driver.o: kernel/vga_driver.c kernel/vga_driver.h
-	$(CC) $(CFLAGS) -c kernel/vga_driver.c -o build/vga_driver.o
+build/vga_driver.o: drivers/vga_driver.c drivers/vga_driver.h
+	$(CC) $(CFLAGS) -c drivers/vga_driver.c -o build/vga_driver.o
 	 
 .PHONY: qemu
 qemu: build/boot.bin build/kernel.out
