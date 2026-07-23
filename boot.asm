@@ -2,10 +2,15 @@ org 0x7c00
 
 bits 16
 
-KERNEL_ENTRY equ 0x10000
+KERNEL_ENTRY    equ 0x100000 ; 1MB
+KERNEL_LOCATION equ 0x10000  ; 64KB
+KERNEL_SECTORS  equ 0x2
+SECTOR_SIZE     equ 512
+
 
 section .text
 jmp _start
+
 
 print_string:
     lodsb
@@ -63,7 +68,7 @@ _start:
     mov ax, 0x1000
     mov es, ax 
     mov bx, 0x0000
-    mov dh, 0x2
+    mov dh, KERNEL_SECTORS
 
     call disk_load
 
@@ -101,11 +106,11 @@ GDT:
     mov cr0, eax
 
 reload_cs:
-    jmp 0x08:reload_segments
+    jmp 0x08:entry_32
 
 ; Protected Mode
 bits 32
-reload_segments: ; Protected Mode Flat Model
+entry_32: ; Protected Mode Flat Model
     mov ax, 0x10
     mov ds, ax
     mov es, ax
@@ -115,7 +120,12 @@ reload_segments: ; Protected Mode Flat Model
 
     mov ebp, 0x90000
     mov esp, ebp 
-    
+
+    mov ecx, (SECTOR_SIZE * KERNEL_SECTORS)
+    mov esi, KERNEL_LOCATION 
+    mov edi, KERNEL_ENTRY 
+    rep movsb
+
     jmp KERNEL_ENTRY
     
 ; Setting up GDT

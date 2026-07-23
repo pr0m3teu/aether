@@ -8,6 +8,7 @@ void kernel_entry(void)
     vga_clear_screen();
     vga_print_string("Welcome to Project Aether\n");
     vga_print_string(message);
+    vga_print_string("> ");
 
     for (;;) {
         __asm__ volatile ("hlt");
