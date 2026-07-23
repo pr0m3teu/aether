@@ -6,6 +6,7 @@ CFLAGS=-Wall -Wextra -std=c11 -O2 -ffreestanding -fno-PIE -m32
 CFLAGS +=-I.
 # Because of no SSE availability yet
 CFLAGS +=-mno-sse -mno-sse2 -mno-mmx -mno-80387
+
 LFLAGS=-T kernel/kernel.ld --oformat binary -m elf_i386
 QEMU_FLAGS=-drive format=raw,file=build/aether.img -m 128M \
 		   	-cpu qemu64 \
