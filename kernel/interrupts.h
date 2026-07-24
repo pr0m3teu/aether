@@ -2,6 +2,7 @@
 #define INTERRUPTS_H_
 
 #include "common/types.h"
+#include "x86.h"
 
 #define MAX_INTS 256
 
@@ -28,7 +29,7 @@
 #define E_SIMD_ERR    19  // SIMD Floating-Point Exception
 #define E_VIRT_ERR    20  // Virtualization Exception
 #define E_CTRL_ERR    21  // Control Protection Exception
-                          
+
 
 // 32-bit only 
 struct gatedesc {
@@ -49,10 +50,9 @@ struct idtr_s {
 
 
 __attribute__((noreturn)) 
-void exception_handler(void);
+void exception_handler(struct trapframe tr);
 
 void idt_init(void);
-
 
 extern void isr0();
 extern void isr1();

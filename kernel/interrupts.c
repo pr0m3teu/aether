@@ -1,6 +1,7 @@
-#include "drivers/vga_driver.h"
-
 #include "interrupts.h"
+#include "common/util.h"
+#include "x86.h"
+
 
 __attribute__((aligned(0x10))) 
 static struct gatedesc idt[MAX_INTS];
@@ -62,9 +63,50 @@ void idt_init()
         
 }
 
-void exception_handler()
+/* To print the message which defines every exception */
+const char *exception_messages[] = {
+    "Division By Zero",
+    "Debug",
+    "Non Maskable Interrupt",
+    "Breakpoint",
+    "Into Detected Overflow",
+    "Out of Bounds",
+    "Invalid Opcode",
+    "No Coprocessor",
+
+    "Double Fault",
+    "Coprocessor Segment Overrun",
+    "Bad TSS",
+    "Segment Not Present",
+    "Stack Fault",
+    "General Protection Fault",
+    "Page Fault",
+    "Unknown Interrupt",
+
+    "Coprocessor Fault",
+    "Alignment Check",
+    "Machine Check",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved"
+};
+
+void exception_handler(struct trapframe tr)
 {
-    vga_print_string("EXCEPTION\n");
+    kprint("EXCEPTION: ");
+    kprint(exception_messages[tr.trapno]);
+    kprint("\n");
     __asm__ volatile("cli; hlt");
 }
 
