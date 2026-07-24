@@ -1,8 +1,11 @@
 #include "drivers/vga_driver.h"
 
+#include "interrupts.h"
+
 __attribute__((section(".text.boot"))) // Small hack for now
 void kernel_entry(void)
 {
+    idt_init();
     char message[] = "Hello from Protected Mode!\n";
 
     vga_clear_screen();
