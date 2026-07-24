@@ -54,7 +54,26 @@ ISR_NOERRCODE 31
 
 
 alltraps:
+    pusha 
+    mov eax, ds
+    push eax
+
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+
     call exception_handler
+    
+    pop ebx
+    mov ds, ebx
+    mov es, ebx
+    mov fs, ebx
+    mov gs, ebx
+
+    popa
     add esp, 0x8
+    sti
     iret
 
