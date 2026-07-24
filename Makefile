@@ -22,6 +22,7 @@ OBJS= $(BUILD)kernel.o        \
 	  $(BUILD)interrupts.o    \
 	  $(BUILD)interruptsasm.o \
 	  $(BUILD)vga_driver.o    \
+	  $(BUILD)util.o 		  \
 
 
 
@@ -49,12 +50,14 @@ $(BUILD)interrupts.o: kernel/interrupts.c kernel/interrupts.h
 
 
 $(BUILD)interruptsasm.o: kernel/interrupts.s
-	$(ASM) -f elf kernel/interrupts.s -o $(BUILD)interruptsasm.o 
+	$(ASM) -f elf -o $(BUILD)interruptsasm.o kernel/interrupts.s
 
 
 $(BUILD)vga_driver.o: drivers/vga_driver.c drivers/vga_driver.h
-	$(CC) $(CFLAGS) -c drivers/vga_driver.c -o build/vga_driver.o
+	$(CC) $(CFLAGS) -c -o $(BUILD)vga_driver.o drivers/vga_driver.c
 
+$(BUILD)util.o: common/util.c common/util.h
+	$(CC) $(CFLAGS) -c -o $(BUILD)util.o common/util.c
 
 .PHONY: qemu
 qemu: build/boot.bin build/kernel.out
