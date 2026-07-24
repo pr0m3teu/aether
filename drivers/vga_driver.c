@@ -4,15 +4,15 @@
 
 void vga_set_cursor(unsigned short offset)
 {
-    out(VGA_CRT_INDEX, VGA_CURSOR_HIGH);
+    outb(VGA_CRT_INDEX, VGA_CURSOR_HIGH);
 
     unsigned char high_byte = (offset >> 8);
-    out(VGA_CRT_DATA, high_byte);
+    outb(VGA_CRT_DATA, high_byte);
 
     unsigned char low_byte =  (offset & 0xff);
 
-    out(VGA_CRT_INDEX, VGA_CURSOR_LOW);
-    out(VGA_CRT_DATA, low_byte);
+    outb(VGA_CRT_INDEX, VGA_CURSOR_LOW);
+    outb(VGA_CRT_DATA, low_byte);
 }
 
 
@@ -21,12 +21,12 @@ unsigned short vga_get_cursor()
     unsigned short cursor;
     unsigned char  curr_byte;
 
-    out(VGA_CRT_INDEX, VGA_CURSOR_HIGH);
-    curr_byte = in(VGA_CRT_DATA);
+    outb(VGA_CRT_INDEX, VGA_CURSOR_HIGH);
+    curr_byte = inb(VGA_CRT_DATA);
     cursor = curr_byte << 8;
 
-    out(VGA_CRT_INDEX, VGA_CURSOR_LOW);
-    curr_byte = in(VGA_CRT_DATA);
+    outb(VGA_CRT_INDEX, VGA_CURSOR_LOW);
+    curr_byte = inb(VGA_CRT_DATA);
     cursor |= curr_byte;
 
     return cursor;
