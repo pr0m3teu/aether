@@ -1,3 +1,5 @@
+#ifndef x86_H_
+#define x86_H_
 #include "common/types.h"
 
 
@@ -21,6 +23,7 @@ struct trapframe {
     uint32_t eflags;
 };
 
+#ifdef BASIC_IMPLEMENTATIONS // TODO: Remove this include hack from the project
 
 // Basic functions for I/O
 unsigned char inb(unsigned short port)
@@ -37,3 +40,7 @@ void outb(unsigned short port, unsigned char value)
 {
     __asm__ volatile ("out %%al, %%dx": :"a" (value) ,"d" (port));
 }
+
+#endif // BASIC_IMPLEMENTATIONS
+
+#endif // x86_H_

@@ -1,4 +1,4 @@
-#include "drivers/vga_driver.h"
+#include "common/util.h"
 
 #include "interrupts.h"
 
@@ -8,10 +8,10 @@ void kernel_entry(void)
     idt_init();
     char message[] = "Hello from Protected Mode!\n";
 
-    vga_clear_screen();
-    vga_print_string("Welcome to Project Aether\n");
-    vga_print_string(message);
-    vga_print_string("> ");
+    kclear();
+    kprint("Welcome to Project Aether\n");
+    kprint(message);
+    kprint("> ");
 
     for (;;) {
         __asm__ volatile ("hlt");
