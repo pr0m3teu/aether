@@ -1,13 +1,15 @@
 #ifndef KASSERT_H_
 #define KASSERT_H_
 
-void kassert_fail(const char* cond, const char* file) __attribute__((noreturn));
+#include "types.h"
+
+void kassert_fail(const char* cond, const char* file, uint32_t line) __attribute__((noreturn));
 
 #define KASSERT(cond) \
     do {      \
         if(!(cond))                  \
         {                            \
-            kassert_fail(#cond, __FILE__);\
+            kassert_fail(#cond, __FILE__, __LINE__);\
         }                            \
     } while(0);                      \
 

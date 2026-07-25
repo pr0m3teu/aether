@@ -16,6 +16,7 @@ void kernel_entry(void)
     kprint("Welcome to Project Aether\n");
     kprint("Hello from Protected Mode!\n");
     kprint("> ");
+    KASSERT(2 + 2 == 5);
 
     for (;;) {
         __asm__ volatile ("hlt");

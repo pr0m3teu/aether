@@ -64,7 +64,7 @@ $(BUILD)kassert.o: common/kassert.c common/kassert.h
 	$(CC) $(CFLAGS) -c -o $(BUILD)kassert.o common/kassert.c
 
 .PHONY: qemu
-qemu: build/boot.bin build/kernel.out
+qemu: $(BUILD)aether.img
 	clear
 	qemu-system-x86_64 $(QEMU_FLAGS)
 

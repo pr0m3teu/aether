@@ -1,5 +1,6 @@
 #include "serial.h"
 #include "kernel/x86.h"
+#include "common/kassert.h"
 
 
 void serial_init()
@@ -36,5 +37,27 @@ void serial_print_string(const char* cstr)
     {
         serial_putc(*cstr);
         cstr++;
+    }
+}
+
+
+void serial_print_uint(uint32_t num)
+{
+    uint8_t cstr[10] = {0};
+    uint8_t len = 0;
+
+    if (num == 0) serial_putc('0');
+
+    while (num != 0)
+    {
+        cstr[len++] = num % 10;
+        num /= 10;
+    }
+
+
+    KASSERT(len != 0);
+    for (char i = len-1; i >= 0; --i)
+    {
+        serial_putc(cstr[(uint8_t)i] + '0');
     }
 }
