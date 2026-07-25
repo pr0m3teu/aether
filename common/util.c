@@ -37,3 +37,10 @@ void kpanic(const char* cstr)
         __asm__ volatile ("hlt");
     }
 }
+
+
+
+void kassert(_Bool cond, const char* cstr)
+{
+   if (!cond) kpanic(cstr); 
+}
