@@ -1,3 +1,4 @@
+#include "common/kassert.h"
 #include "common/util.h"
 #include "drivers/serial.h"
 
@@ -10,11 +11,10 @@ void kernel_entry(void)
     serial_print_string("[info] Initialized Serial COM\n");
     idt_init();
     serial_print_string("[info] Initialized Interrupt Descriptor Table\n");
-    char message[] = "Hello from Protected Mode!\n";
 
     kclear();
     kprint("Welcome to Project Aether\n");
-    kprint(message);
+    kprint("Hello from Protected Mode!\n");
     kprint("> ");
 
     for (;;) {

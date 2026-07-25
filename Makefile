@@ -25,17 +25,18 @@ OBJS= $(BUILD)kernel.o        \
 	  $(BUILD)vga.o           \
 	  $(BUILD)util.o 		  \
 	  $(BUILD)serial.o 		  \
+	  $(BUILD)kassert.o
 
-
-$(BUILD)boot.bin: boot.asm build/kernel.out
+$(BUILD)aether.img: $(BUILD)boot.bin $(BUILD)kernel.out
 	# Create a 16MB blank disk image
 	dd if=/dev/zero of=build/aether.img bs=1M count=16
-
-	# Assemble your boot sector (NASM) and write it to sector 0
-	$(ASM) -f bin boot.asm -o build/boot.bin
 	dd if=build/boot.bin of=build/aether.img conv=notrunc
 	dd if=build/kernel.out of=build/aether.img bs=512 seek=1 conv=notrunc
 
+
+$(BUILD)boot.bin: boot.asm 
+	# Assemble your boot sector (NASM) and write it to sector 0
+	$(ASM) -f bin boot.asm -o build/boot.bin
 
 $(BUILD)kernel.out: kernel/kernel.ld $(OBJS)
 	 $(LD) $(LFLAGS) -o build/kernel.out $(OBJS)
@@ -58,6 +59,9 @@ $(BUILD)util.o: common/util.c common/util.h
 
 $(BUILD)serial.o: drivers/serial.c drivers/serial.h
 	$(CC) $(CFLAGS) -c -o $(BUILD)serial.o drivers/serial.c
+
+$(BUILD)kassert.o: common/kassert.c common/kassert.h
+	$(CC) $(CFLAGS) -c -o $(BUILD)kassert.o common/kassert.c
 
 .PHONY: qemu
 qemu: build/boot.bin build/kernel.out

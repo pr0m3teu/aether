@@ -1,5 +1,6 @@
 #include "interrupts.h"
 #include "common/util.h"
+#include "common/kassert.h"
 #include "x86.h"
 
 
@@ -101,8 +102,11 @@ const char *exception_messages[] = {
     "Reserved"
 };
 
+
 void exception_handler(struct trapframe *tr)
 {
+    KASSERT(tr);
+    KASSERT(tr->trapno < 32);
     kprint("EXCEPTION: ");
     kprint(exception_messages[tr->trapno]);
     kprint("\n");

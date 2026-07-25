@@ -49,8 +49,7 @@ struct idtr_s {
 } __attribute__((packed));
 
 
-__attribute__((noreturn)) 
-void exception_handler(struct trapframe *tr);
+void exception_handler(struct trapframe *tr) __attribute__((noreturn));
 
 void idt_init(void);
 
