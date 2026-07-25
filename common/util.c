@@ -37,9 +37,9 @@ void kprint_uint(uint32_t num)
     }
 
     KASSERT(len != 0);
-    for (char i = len-1; i >= 0; --i)
+    for (int8_t i = len-1; i >= 0; --i)
     {
-        kputc(cstr[(uint8_t)i] + '0');
+        kputc(cstr[i] + '0');
     }
 }
 
@@ -48,7 +48,7 @@ void kpanic(const char* cstr)
 {
 #ifdef SERIAL_PANIC
     // First print to monitor
-    serial_print_string("\nPANIC: ");
+    serial_print_string("\n(PANIC): ");
     if (cstr)
         serial_print_string(cstr);
     else
@@ -57,7 +57,7 @@ void kpanic(const char* cstr)
     serial_print_string("\n");
 #endif
     // Then screen
-    vga_print_string("\nPANIC: ");
+    vga_print_string("\n(PANIC): ");
     if (cstr)
         vga_print_string(cstr);
     else
@@ -66,7 +66,6 @@ void kpanic(const char* cstr)
     vga_print_string("\n");
 
     cli();
-
     for(;;) {
         __asm__ volatile ("hlt");
     }

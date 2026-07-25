@@ -56,8 +56,8 @@ void serial_print_uint(uint32_t num)
 
 
     KASSERT(len != 0);
-    for (char i = len-1; i >= 0; --i)
+    for (int8_t i = len-1; i >= 0; --i)
     {
-        serial_putc(cstr[(uint8_t)i] + '0');
+        serial_putc(cstr[i] + '0');
     }
 }
