@@ -1,4 +1,3 @@
-#define BASIC_IMPLEMENTATIONS
 #include "kernel/x86.h"
 #include "vga_driver.h"
 

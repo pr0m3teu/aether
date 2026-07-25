@@ -7,6 +7,7 @@ struct trapframe {
 
     uint32_t ds;
     // pusha
+    uint32_t edi;
     uint32_t esi;
     uint32_t ebp;
     uint32_t oesp; // useless
@@ -23,10 +24,9 @@ struct trapframe {
     uint32_t eflags;
 };
 
-#ifdef BASIC_IMPLEMENTATIONS // TODO: Remove this include hack from the project
 
 // Basic functions for I/O
-unsigned char inb(unsigned short port)
+static inline unsigned char inb(unsigned short port)
 {
     unsigned char result;
 
@@ -36,11 +36,11 @@ unsigned char inb(unsigned short port)
 
 }
 
-void outb(unsigned short port, unsigned char value)
+static inline void outb(unsigned short port, unsigned char value)
 {
     __asm__ volatile ("out %%al, %%dx": :"a" (value) ,"d" (port));
 }
 
-#endif // BASIC_IMPLEMENTATIONS
-
 #endif // x86_H_
+    
+

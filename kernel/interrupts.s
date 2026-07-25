@@ -64,7 +64,9 @@ alltraps:
     mov fs, ax
     mov gs, ax
 
+    push esp
     call exception_handler
+    pop esp
     
     pop ebx
     mov ds, ebx
