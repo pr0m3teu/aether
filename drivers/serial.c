@@ -11,7 +11,8 @@ void serial_init()
     outb(COM1+3, 0x03); // Line protocol 8N1 
     outb(COM1+4, 0);    // Modem controll register
     outb(COM1+1, 0x01); // Enable receive interrupts.
-
+    outb(COM1+2, 0xC7); // Enable FIFO, clear, 14-byte threshold
+    outb(COM1+4, 0x0B); // IRQs disabled, RTS/DSR set
     if (inb(COM1+5) == 0xff) return; // No serial
 
     outb(COM1+ 4, 0x0F); // Normal operation mode
@@ -22,18 +23,18 @@ void serial_init()
 }
 
 
-void serial_write(char c)
+void serial_putc(char c)
 {
     while(!(inb(COM1+5) & 0x20));
     outb(COM1, c);
 }
 
 
-void serial_print(const char* cstr)
+void serial_print_string(const char* cstr)
 {
     while(*cstr != 0)
     {
-        serial_write(*cstr);
+        serial_putc(*cstr);
         cstr++;
     }
 }
