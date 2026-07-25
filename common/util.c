@@ -1,4 +1,4 @@
-#include "drivers/vga_driver.h"
+#include "drivers/vga.h"
 #include "util.h"
 
 void kclear(void)

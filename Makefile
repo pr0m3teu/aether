@@ -21,10 +21,9 @@ QEMU_FLAGS=-drive format=raw,file=build/aether.img -m 128M \
 OBJS= $(BUILD)kernel.o        \
 	  $(BUILD)interrupts.o    \
 	  $(BUILD)interruptsasm.o \
-	  $(BUILD)vga_driver.o    \
+	  $(BUILD)vga.o           \
 	  $(BUILD)util.o 		  \
-
-
+	  $(BUILD)serial.o 		  \
 
 
 $(BUILD)boot.bin: boot.asm build/kernel.out
@@ -40,28 +39,30 @@ $(BUILD)boot.bin: boot.asm build/kernel.out
 $(BUILD)kernel.out: kernel/kernel.ld $(OBJS)
 	 $(LD) $(LFLAGS) -o build/kernel.out $(OBJS)
 	 
-
 $(BUILD)kernel.o: kernel/kernel.c
 	 $(CC) $(CFLAGS) -c kernel/kernel.c -o $(BUILD)kernel.o
-
 
 $(BUILD)interrupts.o: kernel/interrupts.c kernel/interrupts.h
 	$(CC) $(CFLAGS) -c  -o $(BUILD)interrupts.o kernel/interrupts.c 
 
-
 $(BUILD)interruptsasm.o: kernel/interrupts.s
 	$(ASM) -f elf -o $(BUILD)interruptsasm.o kernel/interrupts.s
 
-
-$(BUILD)vga_driver.o: drivers/vga_driver.c drivers/vga_driver.h
-	$(CC) $(CFLAGS) -c -o $(BUILD)vga_driver.o drivers/vga_driver.c
+$(BUILD)vga.o: drivers/vga.c drivers/vga.h
+	$(CC) $(CFLAGS) -c -o $(BUILD)vga.o drivers/vga.c
 
 $(BUILD)util.o: common/util.c common/util.h
 	$(CC) $(CFLAGS) -c -o $(BUILD)util.o common/util.c
 
+
+$(BUILD)serial.o: drivers/serial.c drivers/serial.h
+	$(CC) $(CFLAGS) -c -o $(BUILD)serial.o drivers/serial.c
+
 .PHONY: qemu
 qemu: build/boot.bin build/kernel.out
+	clear
 	qemu-system-x86_64 $(QEMU_FLAGS)
+
 
 
 .PHONY: clean
