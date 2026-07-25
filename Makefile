@@ -4,7 +4,8 @@ ASM=nasm
 
 BUILD=build/
 
-CFLAGS=-Wall -Wextra -std=c11 -O2 -ffreestanding -fno-PIE -m32
+CFLAGS=-Wall -Wextra -Werror
+CFLAGS +=-std=c11 -O2 -ffreestanding -fno-PIE -m32
 CFLAGS +=-I.
 CFLAGS +=-nostdinc
 # Because of no SSE availability yet

@@ -106,6 +106,6 @@ void exception_handler(struct trapframe *tr)
     kprint("EXCEPTION: ");
     kprint(exception_messages[tr->trapno]);
     kprint("\n");
-    __asm__ volatile("cli; hlt");
+    for(;;) __asm__ volatile("cli; hlt");
 }
 

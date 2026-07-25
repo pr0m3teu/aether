@@ -16,7 +16,6 @@ void kernel_entry(void)
     kprint("Welcome to Project Aether\n");
     kprint(message);
     kprint("> ");
-    kpanic("Test");
 
     for (;;) {
         __asm__ volatile ("hlt");
