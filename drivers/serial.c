@@ -21,6 +21,7 @@ void serial_init()
     inb(COM1+2);
     inb(COM1+0);
 
+    serial_print_string("[info] Initialized Serial COM\n");
 }
 
 

@@ -53,6 +53,7 @@ void exception_handler(struct trapframe *tr) __attribute__((noreturn));
 
 void idt_init(void);
 
+// Exception routines
 extern void isr0();
 extern void isr1();
 extern void isr2();

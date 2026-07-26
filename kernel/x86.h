@@ -24,11 +24,15 @@ struct trapframe {
     uint32_t eflags;
 };
 
-static inline void cli()
+static inline void cli(void)
 {
     __asm__ volatile ("cli");
 }
 
+static inline void sti(void)
+{
+    __asm__ volatile ("sti");
+}
 // Basic functions for I/O
 static inline unsigned char inb(unsigned short port)
 {
