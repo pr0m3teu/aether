@@ -18,6 +18,8 @@ SECTIONS
     }
 
     .bss : {
+        __bss_start = .;
         *(.bss)
+        __bss_end   = .;
     }
 }
