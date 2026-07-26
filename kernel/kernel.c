@@ -3,12 +3,14 @@
 #include "drivers/serial.h"
 
 #include "interrupts.h"
+#include "pic.h"
 
 __attribute__((section(".text.boot"))) // Small hack for now
 void kernel_entry(void)
 {
     serial_init();
     idt_init();
+    pic_init();
 
     kclear();
     kprint("Welcome to Project Aether\n");

@@ -25,7 +25,8 @@ OBJS= $(BUILD)kernel.o        \
 	  $(BUILD)vga.o           \
 	  $(BUILD)util.o 		  \
 	  $(BUILD)serial.o 		  \
-	  $(BUILD)kassert.o
+	  $(BUILD)kassert.o       \
+	  $(BUILD)pic.o			  \
 
 $(BUILD)aether.img: $(BUILD)boot.bin $(BUILD)kernel.out
 	# Create a 16MB blank disk image
@@ -62,6 +63,10 @@ $(BUILD)serial.o: drivers/serial.c drivers/serial.h
 
 $(BUILD)kassert.o: common/kassert.c common/kassert.h
 	$(CC) $(CFLAGS) -c -o $(BUILD)kassert.o common/kassert.c
+
+$(BUILD)pic.o: kernel/pic.c kernel/pic.h
+	$(CC) $(CFLAGS) -c -o $(BUILD)pic.o kernel/pic.c
+
 
 .PHONY: qemu
 qemu: $(BUILD)aether.img
