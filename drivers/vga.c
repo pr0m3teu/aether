@@ -47,6 +47,21 @@ void vga_clear_screen()
 void vga_putc(char c)
 { 
     unsigned short cursor = vga_get_cursor();
+    if (cursor >= VGA_COLS * VGA_LINES)
+    {
+        for (unsigned short i = VGA_LINES; i < VGA_COLS * VGA_LINES; ++i)
+        {
+            VGA_VIDEO_MEM[i * 2]     = VGA_VIDEO_MEM[(i + VGA_COLS) * 2];
+            VGA_VIDEO_MEM[i * 2 + 1] = VGA_VIDEO_MEM[(i + VGA_COLS) * 2 + 1];
+        }
+        for (unsigned short i = VGA_COLS * (VGA_LINES - 1); i < VGA_COLS * VGA_LINES; ++i)
+        {
+            VGA_VIDEO_MEM[i * 2]     = ' ';
+            VGA_VIDEO_MEM[i * 2 + 1] = VGA_WHITE;
+        }
+        vga_set_cursor((VGA_LINES-1) * VGA_COLS);
+        cursor = (VGA_LINES-1) * VGA_COLS; 
+    }
 
     if (c == '\n')
     {
