@@ -6,6 +6,7 @@
 void kclear(void);
 void kputc(char c);
 void kprint(const char* cstr);
+void kprint_hex(uint32_t num);
 void kprint_uint(uint32_t num);
 void kpanic(const char* cstr) __attribute__((noreturn));
 

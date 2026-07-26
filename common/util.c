@@ -46,6 +46,38 @@ void kprint_uint(uint32_t num)
     }
 }
 
+void kprint_hex(uint32_t num)
+{
+    if (num == 0)
+    {
+        kprint("0x0");
+        return;
+    }
+
+    char cstr[8];
+    uint8_t i = 0;
+    while (num != 0)
+    {
+        uint8_t digit = num % 16;
+        if (digit < 10)
+        {
+            cstr[i] = digit + '0';
+        }
+        else {
+            cstr[i] = (digit - 10) + 'A';
+        }
+        ++i;
+        num /= 16;
+    }
+
+    KASSERT(i != 0);
+    kprint("0x");
+    for(int8_t j = i - 1; j >= 0; --j)
+    {
+        kputc(cstr[j]);
+    }
+    kputc('\n');
+}
 
 void kpanic(const char* cstr)
 {
