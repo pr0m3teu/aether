@@ -1,5 +1,6 @@
 #include "common/kassert.h"
 #include "common/util.h"
+#include "drivers/kbd.h"
 
 #include "pic.h"
 #include "interrupts.h"
@@ -12,6 +13,7 @@ void trap(const struct trapframe *tf)
     switch(tf->trapno)
     {
         case (TRAP | IRQ_KBD):
+            kbdintr();
             pic_eoi(IRQ_KBD);
             break;
         default:

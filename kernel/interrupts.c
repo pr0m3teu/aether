@@ -6,8 +6,7 @@
 #include "x86.h"
 
 
-__attribute__((aligned(0x10))) 
-static struct gatedesc idt[MAX_INTS];
+static struct gatedesc idt[MAX_INTS] __attribute__((aligned(0x10)));
 
 static struct idtr_s idtr = {0};
 
@@ -61,6 +60,7 @@ void idt_init()
     idt_set_descriptor(30,           (uint32_t) isr30, 0x8e);
     idt_set_descriptor(31,           (uint32_t) isr31, 0x8e);
 
+    idt_set_descriptor(TRAP | IRQ_KBD, (uint32_t)irq1, 0x8e);
     __asm__ volatile ("lidt %0": : "m"(idtr));
         
     serial_print_string("[info] Initialized Interrupt Descriptor Table\n");

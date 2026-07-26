@@ -63,6 +63,7 @@ ISR_NOERRCODE 29
 ISR_NOERRCODE 30
 ISR_NOERRCODE 31 
 
+IRQ 1
 
 alltraps:
     pusha 
