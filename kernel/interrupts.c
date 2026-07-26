@@ -3,7 +3,6 @@
 
 #include "common/util.h"
 #include "common/kassert.h"
-#include "x86.h"
 
 
 static struct gatedesc idt[MAX_INTS] __attribute__((aligned(0x10)));

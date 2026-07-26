@@ -37,7 +37,7 @@ $(BUILD)aether.img: $(BUILD)boot.bin $(BUILD)kernel.out
 	dd if=build/kernel.out of=build/aether.img bs=512 seek=1 conv=notrunc
 
 
-$(BUILD)boot.bin: boot.asm 
+$(BUILD)boot.bin: boot/boot.asm 
 	# Assemble your boot sector (NASM) and write it to sector 0
 	$(ASM) -f bin boot.asm -o build/boot.bin
 

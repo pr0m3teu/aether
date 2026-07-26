@@ -2,7 +2,7 @@
 #define INTERRUPTS_H_
 
 #include "common/types.h"
-#include "x86.h"
+#include "arch/x86.h"
 
 #define MAX_INTS 256
 
