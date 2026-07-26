@@ -94,7 +94,7 @@ a20.2:
     jnz a20.2
 
     mov al, 0xdf
-    out 0x64, al
+    out 0x60, al
 
 GDT:
     ; Loading GDT

@@ -31,6 +31,11 @@
 #define E_CTRL_ERR    21  // Control Protection Exception
 
 
+// Interrupt Requests from PIC
+#define TRAP      0x20
+#define IRQ_KBD   0x01
+
+
 // 32-bit only 
 struct gatedesc {
     uint16_t offset_low;
@@ -86,5 +91,7 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
+
+extern void irq1();
 
 #endif // INTERRUPTS_H_

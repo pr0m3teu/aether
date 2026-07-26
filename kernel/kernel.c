@@ -11,6 +11,7 @@ void kernel_entry(void)
     serial_init();
     idt_init();
     pic_init();
+    sti();
 
     kclear();
     kprint("Welcome to Project Aether\n");

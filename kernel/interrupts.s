@@ -4,7 +4,7 @@
         cli
         push byte 0  ; trapframe->err
         push byte %1 ; trapframe->trapno
-        jmp alltraps
+        jmp allexceptions
 %endmacro
 
 
@@ -12,12 +12,23 @@
     global isr%1
     isr%1:
         cli
-        push byte %1 ; trapfram->trapno
-        jmp alltraps
+        push byte %1 ; trapframe->trapno
+        jmp allexceptions
 
 %endmacro
 
+%macro IRQ 1
+%assign i 0x20+%1
+    global irq%1
+    irq%1:
+        cli
+        push byte 0
+        push byte i
+        jmp  alltraps
+%endmacro
+
 extern exception_handler
+extern trap
 
 ISR_NOERRCODE  0
 ISR_NOERRCODE  1
@@ -65,9 +76,25 @@ alltraps:
     mov gs, ax
 
     push esp
+    call trap
+    add esp, 0x4
+    jmp return
+
+allexceptions:
+    pusha 
+    mov eax, ds
+    push eax
+
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+
+    push esp
     call exception_handler
-    pop esp
-    
+    add esp, 0x4
+return:    
     pop ebx
     mov ds, ebx
     mov es, ebx
