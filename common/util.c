@@ -28,8 +28,11 @@ void kprint_uint(uint32_t num)
     uint8_t cstr[10] = {0};
     uint8_t len = 0;
 
-    if (num == 0) kputc('0');
-
+    if (num == 0)
+    {
+        kputc('0');
+        return;
+    }
     while (num != 0)
     {
         cstr[len++] = num % 10;
