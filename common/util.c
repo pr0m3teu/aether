@@ -1,4 +1,4 @@
-#include "kernel/x86.h"
+#include "arch/x86.h"
 #include "drivers/vga.h"
 #include "drivers/serial.h"
 #include "util.h"

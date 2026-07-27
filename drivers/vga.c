@@ -1,5 +1,5 @@
 #include "vga.h"
-#include "kernel/x86.h"
+#include "arch/x86.h"
 
 
 void vga_set_cursor(unsigned short offset)

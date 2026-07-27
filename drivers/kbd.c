@@ -1,4 +1,4 @@
-#include "kernel/x86.h"
+#include "arch/x86.h"
 #include "common/util.h"
 #include "common/types.h"
 #include "kbd.h"

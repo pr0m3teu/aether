@@ -1,5 +1,5 @@
 #include "serial.h"
-#include "kernel/x86.h"
+#include "arch/x86.h"
 #include "common/kassert.h"
 
 
