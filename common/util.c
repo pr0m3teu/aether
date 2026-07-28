@@ -107,3 +107,18 @@ void kpanic(const char* cstr)
 }
 
 
+// TODO: Maybe remove this function definition
+//       and put it to a proper place
+void *memmove(void* dest, void* src, uint32_t len)
+{
+    if (src < dest && src + len > dest)
+        kpanic("(memmove) Overlapping dest and source not implemented");
+
+    uint8_t *d = dest;
+    uint8_t *s = src;
+    while(len--)
+    {
+        *d++ = *s++;
+    }
+    return dest;
+}
