@@ -1,9 +1,13 @@
 #include "common/kassert.h"
 #include "common/util.h"
+#include "drivers/driver.h"
+#include "drivers/vga.h"
 #include "drivers/serial.h"
 
 #include "interrupts.h"
 #include "pic.h"
+
+static struct driver_ops *drivers[] = { &vga_ops, &serial_ops, 0 };
 
 extern uint32_t __bss_start;
 extern uint32_t __bss_end;
@@ -23,12 +27,11 @@ __attribute__((section(".text.boot"))) // Small hack for now
 void kernel_entry(void)
 {
     zero_bss();
-    serial_init();
     idt_init();
     pic_init();
+    drivers_init(drivers);
     sti();
 
-    kclear();
     kprint("Welcome to Project Aether\n");
     kprint("Hello from Protected Mode!\n");
     kprint("> ");

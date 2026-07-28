@@ -29,6 +29,7 @@ OBJS= $(BUILD)kernel.o        \
 	  $(BUILD)pic.o			  \
 	  $(BUILD)trap.o		  \
 	  $(BUILD)kbd.o		      \
+	  $(BUILD)driver.o		  \
 
 $(BUILD)aether.img: $(BUILD)boot.bin $(BUILD)kernel.out
 	# Create a 16MB blank disk image
@@ -39,7 +40,7 @@ $(BUILD)aether.img: $(BUILD)boot.bin $(BUILD)kernel.out
 
 $(BUILD)boot.bin: boot/boot.asm 
 	# Assemble your boot sector (NASM) and write it to sector 0
-	$(ASM) -f bin boot.asm -o build/boot.bin
+	$(ASM) -f bin boot/boot.asm -o build/boot.bin
 
 $(BUILD)kernel.out: kernel/kernel.ld $(OBJS)
 	 $(LD) $(LFLAGS) -o build/kernel.out $(OBJS)
@@ -74,6 +75,10 @@ $(BUILD)trap.o: kernel/trap.c kernel/interrupts.h
 
 $(BUILD)kbd.o: drivers/kbd.c drivers/kbd.h
 	$(CC) $(CFLAGS) -c -o $(BUILD)kbd.o drivers/kbd.c
+
+$(BUILD)driver.o: drivers/driver.c drivers/driver.h
+	$(CC) $(CFLAGS) -c -o $(BUILD)driver.o drivers/driver.c
+
 
 .PHONY: qemu
 qemu: $(BUILD)aether.img

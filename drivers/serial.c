@@ -62,3 +62,18 @@ void serial_print_uint(uint32_t num)
         serial_putc(cstr[i] + '0');
     }
 }
+
+uint32_t serial_write(const uint8_t* buf, uint32_t len)
+{
+    serial_print_string((const char*)buf);
+    return len;
+}
+
+struct driver_ops serial_ops = {
+    .name  = "Serial output",
+    .init  = &serial_init,
+    .write = &serial_write,
+    .read  = 0,
+};
+
+
