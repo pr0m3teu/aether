@@ -3,11 +3,11 @@ LD=x86_64-elf-ld
 ASM=nasm
 
 BUILD=build/
+$(shell mkdir -p $(BUILD))
 
-CFLAGS=-Wall -Wextra -Werror
+CFLAGS=-Wall -Wextra -Werror -nostdinc -I.
 CFLAGS +=-std=c11 -O2 -ffreestanding -fno-PIE -m32
-CFLAGS +=-I.
-CFLAGS +=-nostdinc
+CFLAGS +=-MMD -MP
 # Because of no SSE availability yet
 CFLAGS +=-mno-sse -mno-sse2 -mno-mmx -mno-80387
 
@@ -31,6 +31,9 @@ OBJS= $(BUILD)kernel.o        \
 	  $(BUILD)kbd.o		      \
 	  $(BUILD)driver.o		  \
 
+VPATH=common:drivers:kernel
+-include $(OBJS:.o=.d)
+
 $(BUILD)aether.img: $(BUILD)boot.bin $(BUILD)kernel.out
 	# Create a 16MB blank disk image
 	dd if=/dev/zero of=build/aether.img bs=1M count=16
@@ -45,40 +48,12 @@ $(BUILD)boot.bin: boot/boot.asm
 $(BUILD)kernel.out: kernel/kernel.ld $(OBJS)
 	 $(LD) $(LFLAGS) -o build/kernel.out $(OBJS)
 	 
-$(BUILD)kernel.o: kernel/kernel.c
-	 $(CC) $(CFLAGS) -c kernel/kernel.c -o $(BUILD)kernel.o
 
-$(BUILD)interrupts.o: kernel/interrupts.c kernel/interrupts.h
-	$(CC) $(CFLAGS) -c  -o $(BUILD)interrupts.o kernel/interrupts.c 
+$(BUILD)%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(BUILD)interruptsasm.o: kernel/interrupts.s
-	$(ASM) -f elf -o $(BUILD)interruptsasm.o kernel/interrupts.s
-
-$(BUILD)vga.o: drivers/vga.c drivers/vga.h
-	$(CC) $(CFLAGS) -c -o $(BUILD)vga.o drivers/vga.c
-
-$(BUILD)util.o: common/util.c common/util.h
-	$(CC) $(CFLAGS) -c -o $(BUILD)util.o common/util.c
-
-
-$(BUILD)serial.o: drivers/serial.c drivers/serial.h
-	$(CC) $(CFLAGS) -c -o $(BUILD)serial.o drivers/serial.c
-
-$(BUILD)kassert.o: common/kassert.c common/kassert.h
-	$(CC) $(CFLAGS) -c -o $(BUILD)kassert.o common/kassert.c
-
-$(BUILD)pic.o: kernel/pic.c kernel/pic.h
-	$(CC) $(CFLAGS) -c -o $(BUILD)pic.o kernel/pic.c
-
-$(BUILD)trap.o: kernel/trap.c kernel/interrupts.h
-	$(CC) $(CFLAGS) -c -o $(BUILD)trap.o kernel/trap.c
-
-$(BUILD)kbd.o: drivers/kbd.c drivers/kbd.h
-	$(CC) $(CFLAGS) -c -o $(BUILD)kbd.o drivers/kbd.c
-
-$(BUILD)driver.o: drivers/driver.c drivers/driver.h
-	$(CC) $(CFLAGS) -c -o $(BUILD)driver.o drivers/driver.c
-
+$(BUILD)interruptsasm.o: interrupts.s
+	$(ASM) -f elf -o $@ $<
 
 .PHONY: qemu
 qemu: $(BUILD)aether.img
