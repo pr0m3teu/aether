@@ -13,7 +13,7 @@
 static u32 strlen(const char* cstr)
 {
     u32 len = 0;
-    while (cstr++)
+    while (*(cstr++))
     {
         ++len;
     }

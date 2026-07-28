@@ -27,9 +27,9 @@ __attribute__((section(".text.boot"))) // Small hack for now
 void kernel_entry(void)
 {
     zero_bss();
+    drivers_init(drivers);
     idt_init();
     pic_init();
-    drivers_init(drivers);
     sti();
 
     kprint("Welcome to Project Aether\n");

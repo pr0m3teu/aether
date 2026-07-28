@@ -104,6 +104,6 @@ return:
 
     popa
     add esp, 0x8
-    sti
     iret
+
 
