@@ -36,40 +36,6 @@ void kernel_entry(void)
     kprint("Welcome to Project Aether\n");
     kprint("Hello from Protected Mode!\n");
     kprint("> ");
-    uint8_t run = 1;
-    char line_buf[256] = {0};
-    uint8_t curr = 0;
-    while (run)
-    {
-        char ch = kbd_get_char();
-        switch(ch)
-        {
-            case -1:
-                break;
-            case 27: // ESC 
-                run = 0;
-                break;
-            case '\n':
-                kputc('\n');
-                line_buf[curr] = '\0';
-                kprint(line_buf);
-                kprint("\n> ");
-                curr = 0;
-                break;
-            case '\b':
-                uint16_t cursor = vga_get_cursor();
-                vga_set_cursor(cursor-1);
-                vga_putc(' ');
-                vga_set_cursor(cursor-1);
-                curr--;
-                break;
-
-            default:
-                line_buf[curr++] = ch;
-                kputc(ch);
-                break;
-        }
-    }
 
     for (;;) {
         __asm__ volatile ("hlt");

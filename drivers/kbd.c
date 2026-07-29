@@ -5,6 +5,11 @@
 #include "driver.h"
 #include "kbd.h"
 
+extern void consoleintr(char (*getc)(void));
+
+static char kbd_buf[MAX_KBD_BUF] = {0};
+static uint8_t head = 0;
+static uint8_t tail = 0;
 
 static inline void kbd_wait_input(void)
 {
@@ -43,9 +48,18 @@ void kbd_init()
 
 }
 
+static char kbd_get_char(void)
+{
+    KASSERT(head <= tail);
 
-static char kbd_buf[MAX_KBD_BUF] = {0};
-static uint8_t head = 0, tail = 0;
+    if (head == tail) return -1;
+
+    char c = kbd_buf[head++];    
+    if (head == UINT8_MAX) head = 0;
+
+    return c;
+}
+
 void kbd_irq_handle()
 {
     KASSERT(head <= tail);
@@ -58,28 +72,14 @@ void kbd_irq_handle()
     uint8_t key = ascii_map[scancode];
     if (key)
     {
-        if (tail < MAX_KBD_BUF - 1)
+        kbd_buf[tail++] = key;
+        if (tail == UINT8_MAX )
         {
-            kbd_buf[tail++] = key;
-        }
-        else {
-            kpanic("kbd_irq_handle: Buffer full!");
+            tail = 0;
         }
     }
-    else
-    {
-        kprint("Unknow key\n");
-    }
-}
 
-
-int8_t kbd_get_char(void)
-{
-    KASSERT(head <= tail);
-
-    if (head == tail) return -1;
-
-    return kbd_buf[head++];
+    consoleintr(&kbd_get_char);
 }
 
 
@@ -89,4 +89,5 @@ struct driver_ops kbd_ops = {
     .write = 0,
     .read  = 0,
 };
+
 

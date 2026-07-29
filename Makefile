@@ -30,6 +30,7 @@ OBJS= $(BUILD)kernel.o        \
 	  $(BUILD)trap.o		  \
 	  $(BUILD)kbd.o		      \
 	  $(BUILD)driver.o		  \
+	  $(BUILD)console.o       \
 
 VPATH=common:drivers:kernel
 

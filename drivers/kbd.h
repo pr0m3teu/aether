@@ -25,7 +25,6 @@ static const unsigned char ascii_map[0x60] = {
 
 void kbd_init(void);
 void kbd_irq_handle(void);
-int8_t kbd_get_char(void);
 
 extern struct driver_ops kbd_ops;
 

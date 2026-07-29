@@ -1,6 +1,9 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
+#define UINT8_MAX  0xff
+#define INT8_MAX   0x7f
+
 typedef unsigned char    uint8_t;
 typedef unsigned short  uint16_t;
 typedef unsigned int    uint32_t;
