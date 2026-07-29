@@ -13,7 +13,7 @@ void trap(const struct trapframe *tf)
     switch(tf->trapno)
     {
         case (TRAP | IRQ_KBD):
-            kbdintr();
+            kbd_irq_handle();
             pic_eoi(IRQ_KBD);
             break;
         default:

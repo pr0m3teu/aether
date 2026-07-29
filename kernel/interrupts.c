@@ -66,7 +66,7 @@ void idt_init()
 }
 
 /* To print the message which defines every exception */
-const char *exception_messages[] = {
+static const char *exception_messages[] = {
     "Division By Zero",
     "Debug Exception",
     "Non Maskable Interrupt",
