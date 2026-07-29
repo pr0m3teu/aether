@@ -1,5 +1,25 @@
-CC=x86_64-elf-gcc
-LD=x86_64-elf-ld
+OBJS= $(BUILD)kernel.o        \
+	  $(BUILD)interrupts.o    \
+	  $(BUILD)interruptsasm.o \
+	  $(BUILD)vga.o           \
+	  $(BUILD)util.o 		  \
+	  $(BUILD)serial.o 		  \
+	  $(BUILD)kassert.o       \
+	  $(BUILD)pic.o			  \
+	  $(BUILD)trap.o		  \
+	  $(BUILD)kbd.o		      \
+	  $(BUILD)driver.o		  \
+	  $(BUILD)console.o       \
+
+VPATH=common:drivers:kernel
+	
+# Comment this out if you don't have a cross-compiler
+TOOLPREFIX=x86_64-elf-
+# Uncomment for no cross-compiler
+# TOOLPREFIX= 
+
+CC=$(TOOLPREFIX)gcc
+LD=$(TOOLPREFIX)ld
 ASM=nasm
 
 BUILD=build/
@@ -19,20 +39,6 @@ QEMU_FLAGS=-drive format=raw,file=build/aether.img -m 128M \
 			-d int,cpu_reset,in_asm \
 			-D $(BUILD)qemu.log
 
-OBJS= $(BUILD)kernel.o        \
-	  $(BUILD)interrupts.o    \
-	  $(BUILD)interruptsasm.o \
-	  $(BUILD)vga.o           \
-	  $(BUILD)util.o 		  \
-	  $(BUILD)serial.o 		  \
-	  $(BUILD)kassert.o       \
-	  $(BUILD)pic.o			  \
-	  $(BUILD)trap.o		  \
-	  $(BUILD)kbd.o		      \
-	  $(BUILD)driver.o		  \
-	  $(BUILD)console.o       \
-
-VPATH=common:drivers:kernel
 
 $(BUILD)aether.img: $(BUILD)boot.bin $(BUILD)kernel.out
 	# Create a 16MB blank disk image
