@@ -109,6 +109,6 @@ void exception_handler(struct trapframe *tr)
     kprint("EXCEPTION: ");
     kprint(exception_messages[tr->trapno]);
     kprint("\n");
-    for(;;) __asm__ volatile("cli; hlt");
+    kpanic("exception is unhandled");
 }
 

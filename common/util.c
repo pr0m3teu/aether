@@ -107,8 +107,10 @@ void kpanic(const char* cstr)
 }
 
 
-// TODO: Maybe remove this function definition
-//       and put it to a proper place
+/* 
+ * TODO: Maybe remove this function definition
+ *       and put it to a proper place
+*/
 void *memmove(void* dest, const void* src, uint32_t len)
 {
     if (src < dest && src + len > dest)

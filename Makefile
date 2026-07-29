@@ -32,7 +32,6 @@ OBJS= $(BUILD)kernel.o        \
 	  $(BUILD)driver.o		  \
 
 VPATH=common:drivers:kernel
--include $(OBJS:.o=.d)
 
 $(BUILD)aether.img: $(BUILD)boot.bin $(BUILD)kernel.out
 	# Create a 16MB blank disk image
@@ -50,10 +49,14 @@ $(BUILD)kernel.out: kernel/kernel.ld $(OBJS)
 	 
 
 $(BUILD)%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) -o $@ $(CFLAGS) -c $<
+
 
 $(BUILD)interruptsasm.o: interrupts.s
 	$(ASM) -f elf -o $@ $<
+
+
+-include $(OBJS:.o=.d)
 
 .PHONY: qemu
 qemu: $(BUILD)aether.img

@@ -6,17 +6,27 @@
 void serial_init()
 {
     outb(COM1+2, 0x0);  
+    io_wait();
     outb(COM1+3, 0x80); // enable DLAB
+    io_wait();
     outb(COM1,   0x03); // low divisor value
+    io_wait();
     outb(COM1,   0x0);  // high divisor value
+    io_wait();
     outb(COM1+3, 0x03); // Line protocol 8N1 
+    io_wait();
     outb(COM1+4, 0);    // Modem controll register
+    io_wait();
     outb(COM1+1, 0x01); // Enable receive interrupts.
+    io_wait();
     outb(COM1+2, 0xC7); // Enable FIFO, clear, 14-byte threshold
+    io_wait();
     outb(COM1+4, 0x0B); // IRQs disabled, RTS/DSR set
+    io_wait();
     if (inb(COM1+5) == 0xff) return; // No serial
 
     outb(COM1+ 4, 0x0F); // Normal operation mode
+    io_wait();
 
     inb(COM1+2);
     inb(COM1+0);

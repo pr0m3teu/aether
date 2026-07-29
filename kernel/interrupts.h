@@ -1,6 +1,8 @@
 #ifndef INTERRUPTS_H_
 #define INTERRUPTS_H_
 
+// TODO: Refactor this system or rebuild it from scratch
+
 #include "common/types.h"
 #include "arch/x86.h"
 
@@ -92,6 +94,7 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
+// Interrupt Requests
 extern void irq1();
 
 #endif // INTERRUPTS_H_

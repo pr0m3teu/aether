@@ -49,6 +49,13 @@ static inline void outb(unsigned short port, unsigned char value)
     __asm__ volatile ("out %%al, %%dx": :"a" (value) ,"d" (port));
 }
 
+
+static inline void io_wait()
+{
+    outb(0x80, 0);
+}
+
+
 #endif // x86_H_
     
 
