@@ -5,10 +5,12 @@
 #include "pic.h"
 #include "interrupts.h"
 
+
 void trap(const struct trapframe *tf)
 {
     KASSERT(tf);
-    KASSERT(tf->trapno > 0x1f);
+    KASSERT(tf->trapno > 0x01f);
+    KASSERT(tf->trapno < 0x100);
     
     switch(tf->trapno)
     {
@@ -18,7 +20,7 @@ void trap(const struct trapframe *tf)
             break;
         default:
             kpanic("(trap) Unknown interrupt\n");
-
     }
-    
 }
+
+

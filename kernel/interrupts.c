@@ -1,9 +1,8 @@
-#include "drivers/serial.h"
-#include "interrupts.h"
-
-#include "common/util.h"
 #include "common/kassert.h"
+#include "common/util.h"
+#include "drivers/serial.h"
 
+#include "interrupts.h"
 
 static struct gatedesc idt[MAX_INTS] __attribute__((aligned(0x10)));
 
@@ -26,6 +25,7 @@ void idt_init()
     idtr.base  = (uint32_t)&idt[0];
     idtr.limit = (uint16_t) sizeof(struct gatedesc) * MAX_INTS - 1;
 
+    // Intel Reserved ISRs
     idt_set_descriptor(E_DIVIDE,     (uint32_t) isr0, 0x8e);
     idt_set_descriptor(E_DEBUG,      (uint32_t) isr1, 0x8e);
     idt_set_descriptor(E_NMI,        (uint32_t) isr2, 0x8e);
@@ -59,7 +59,8 @@ void idt_init()
     idt_set_descriptor(30,           (uint32_t) isr30, 0x8e);
     idt_set_descriptor(31,           (uint32_t) isr31, 0x8e);
 
-    idt_set_descriptor(TRAP | IRQ_KBD, (uint32_t)irq1, 0x8e);
+    // PIC defined ISRs 
+    idt_set_descriptor(TRAP | IRQ_KBD, (uint32_t)isr33, 0x8e);
     __asm__ volatile ("lidt %0": : "m"(idtr));
         
     serial_print_string("[info] Initialized Interrupt Descriptor Table\n");

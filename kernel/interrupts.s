@@ -19,8 +19,8 @@
 
 %macro IRQ 1
 %assign i 0x20+%1
-    global irq%1
-    irq%1:
+    global isr%[i]
+    isr%[i]:
         cli
         push byte 0
         push byte i

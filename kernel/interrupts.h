@@ -95,6 +95,6 @@ extern void isr30();
 extern void isr31();
 
 // Interrupt Requests
-extern void irq1();
+extern void isr33();
 
 #endif // INTERRUPTS_H_
